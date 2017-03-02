@@ -1,6 +1,7 @@
 package com.mytests.course.ee.jdbc;
 
 
+import com.mytests.course.ee.jdbc.model.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,21 +11,27 @@ import java.sql.*;
  *
  */
 public class Main {
-    private static final Logger log = LoggerFactory.getLogger(Main.class);
+//    private static final Logger log = LoggerFactory.getLogger(Main.class);
 
+
+
+
+
+    private  static final Logger log = LoggerFactory.getLogger(Main.class);
     public static void main(String[] args) throws SQLException {
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try{
-            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/JavaCourse2","root","root");
-            ps = con.prepareStatement("select user_name from test");
-            rs = ps.executeQuery();
-            while(rs.next()){
-                log.debug("First name - {}",rs.getString("user_name"));
+        Region region =(Region) new Test<Region>() {
+            Object object = null;
+            @Override
+            public Object actionForTest() {
+                object = new Region(1,"Voroneg");
+                return object;
             }
-        } catch(SQLException ex){
-            ex.printStackTrace();
-        }
+        }.actionForTest();
+
+        log.debug("Print region: {}",region.getRegionName());
     }
+}
+
+interface Test<T>{
+    Object actionForTest();
 }
